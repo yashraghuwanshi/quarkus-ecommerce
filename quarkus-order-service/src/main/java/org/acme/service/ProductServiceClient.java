@@ -1,6 +1,7 @@
 package org.acme.service;
 
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import org.acme.payload.Product;
@@ -11,6 +12,9 @@ import java.util.List;
 @Path("/products")
 @RegisterRestClient(configKey = "post-api")
 public interface ProductServiceClient {
+
+    @POST
+    Product createProduct(Product product);
 
     @GET
     List<Product> getProducts();

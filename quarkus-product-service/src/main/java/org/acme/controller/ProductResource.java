@@ -41,6 +41,12 @@ public class ProductResource {
     @GET
     @Path("/search/{name}")
     public Product getProductByName(String name){
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt(); // Restore interrupted status
+            log.error("Thread was interrupted {}", e.getMessage());
+        }
         return productRepository.findByName(name);
     }
 

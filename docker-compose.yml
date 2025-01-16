@@ -1,0 +1,47 @@
+services:
+  product-service:
+    build:
+      context: ./quarkus-product-service
+      dockerfile: src/main/docker/Dockerfile.jvm
+    image: product-service:latest
+    container_name: product-service
+    environment:
+      - QUARKUS_DATASOURCE_JDBC_URL=jdbc:mysql://mysqldb:3307/testdb?createDatabaseIfNotExist=true
+      - QUARKUS_DATASOURCE_USERNAME=root
+      - QUARKUS_DATASOURCE_PASSWORD=root
+    depends_on:
+      - mysqldb
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network
+
+  order-service:
+    build:
+      context: ./quarkus-order-service
+      dockerfile: src/main/docker/Dockerfile.jvm
+    image: order-service:latest
+    container_name: order-service
+    depends_on:
+      - product-service
+    ports:
+      - "8081:8081"
+    networks:
+      - app-network
+
+  mysqldb:
+    image: mysql:8.0
+    container_name: mysqldb
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - app-network
+
+volumes:
+  mysql-data:
+
+networks:
+  app-network:
+    driver: bridge
